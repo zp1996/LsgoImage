@@ -1,0 +1,28 @@
+{
+  "name": "lsgoimage",
+  "version": "1.0.0",
+  "description": "LSGO团队图像处理demo",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zp1996/LsgoImage.git"
+  },
+  "keywords": [
+    "image",
+    "图像处理"
+  ],
+  "author": "zp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zp1996/LsgoImage/issues"
+  },
+  "homepage": "https://github.com/zp1996/LsgoImage#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jade": "^1.1.0",
+    "gulp-less": "^3.1.0"
+  }
+}

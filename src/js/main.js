@@ -12,4 +12,4 @@ var oldImg = I(getId("oldImage")),
 	}, false);
 });
 
-oldImg.setImg("images/t3.jpg");
+oldImg.setImg("/images/t3.jpg");

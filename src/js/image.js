@@ -152,7 +152,7 @@
 	// 调整亮度与对比度
 	LSGOImage.fn.ConBrBaseFilter = function (arr, c, b) {
 		this.BaseFun(function (arr, c, b) {
-			c = 2; b = 0.1;
+			c = 2; b = -2;
 			if (!c && !b)
 				return void 0;
 			var len = arr.length, 
