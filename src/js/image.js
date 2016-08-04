@@ -3,8 +3,7 @@
   * some simple methods in image processing
   * @author zp
   */
-(function (global) {
-
+(function (g) {
 	var LSGOImage = function (canvas) {
 		return new LSGOImage.fn.init(canvas);
 	};
@@ -35,6 +34,7 @@
 			}
 		});
 		this.ctx = canvas.getContext("2d");
+		this.oldData = [];
 	};
 	LSGOImage.noop = function () {};
 	LSGOImage.setImg = function (img, fn, x, y) {
@@ -70,6 +70,7 @@
 		this.imgData = this.ctx.getImageData(this.startX, this.startY, 
 																 				 this.width - this.startX, 
 																         this.height - this.startY);
+		this.oldData = JSON.parse(JSON.stringify(this.imgData.data));
 		return this;
 	};
 	// 产生分解图像数组
@@ -117,9 +118,20 @@
 			}
 		}, arr);
 	};
+	// 变为原图
+	LSGOImage.fn.toOld = function () {
+		this.BaseFun(function (arr) {	
+			var len = arr.length;
+			for (var i = 0; i < len; i += 4) {
+				arr[i] = this.oldData[i];
+				arr[i + 1] = this.oldData[i + 1];
+				arr[i + 2] = this.oldData[i + 2]; 
+			}
+		});
+	};
 	// 马赛克(利用领域内任意一点代替当前领域像素点)
 	LSGOImage.fn.toMosaic = function (arr, level) {
-		this.BaseFun(function (arr, level) {
+		this.BaseFun(function (arr) {
 			level = level || 10;
 			var row = this.width,
 				col = this.height,
@@ -151,8 +163,11 @@
 	};
 	// 调整亮度与对比度
 	LSGOImage.fn.ConBrBaseFilter = function (arr, c, b) {
-		this.BaseFun(function (arr, c, b) {
-			c = 2; b = -2;
+		if (!Array.isArray(arr)) {
+			b = c;
+			c = arr;
+		}
+		this.BaseFun(function (arr) {
 			if (!c && !b)
 				return void 0;
 			var len = arr.length, 
@@ -160,11 +175,14 @@
 				total = this.width * this.height;
 			// 计算出r,g,b的均值
 			for (var i = 0; i < len; i += 4) {
-				sum[0] += arr[i];
-				sum[1] += arr[i + 1];
-				sum[2] += arr[i + 2];
+				sum[0] += this.oldData[i];
+				sum[1] += this.oldData[i + 1];
+				sum[2] += this.oldData[i + 2];
+				arr[i] = this.oldData[i];
+				arr[i + 1] = this.oldData[i + 1];
+				arr[i + 2] = this.oldData[i + 2];
 			}	
-			sum = sum.map((val) => {
+			sum = sum.map(function (val) {
 				return val / total | 0;
 			});
 			for (var i = 0; i < len; i += 4) {
@@ -185,6 +203,6 @@
 			return num > 255 ? 255 : (num < 0 ? 0 : num);
 		}
 	}; 
-	global.I = global.LSGOImage = LSGOImage;
+	g.I = g.LSGOImage = LSGOImage;
 
 })(this);

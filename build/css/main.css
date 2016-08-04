@@ -7,6 +7,10 @@ body,
 html {
   height: 100%;
 }
+progress {
+  cursor: pointer;
+  width: 200px;
+}
 .width {
   width: 1000px;
   min-width: 1000px;
@@ -43,12 +47,38 @@ header {
 .main-area {
   margin: auto;
   min-height: calc(100% - 80px);
+  min-width: 1000px;
   margin-bottom: -40px;
+}
+.handle-area {
+  float: left;
+  padding: 50px;
+  width: 200px;
+}
+.handle-ways {
+  list-style-type: none;
+}
+.handle-ways li {
+  height: 50px;
+  line-height: 50px;
+}
+.handle-ways li a {
+  cursor: pointer;
+}
+.handle-ways li a:hover {
+  text-decoration: underline;
+}
+.handle-title {
+  text-align: center;
 }
 .main-area::after {
   content: "";
   display: block;
   height: 40px;
+}
+.content-wrapper {
+  margin-left: 300px;
+  padding: 50px;
 }
 footer {
   height: 40px;
@@ -63,8 +93,4 @@ footer {
 }
 .author:hover {
   text-decoration: underline;
-}
-canvas {
-  border: 2px solid blue;
-  margin: 0px 50px;
 }

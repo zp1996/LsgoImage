@@ -1,7 +1,7 @@
 const http = require("http"),
 	fs = require("fs"),
 	types = require("./mine"),
-	staticPath = __dirname + "/src";
+	staticPath = __dirname + "/build";
 function ServerFile (res, path, type, status) {
 	status = status || 200;
 	fs.readFile(path, (err, data) => {

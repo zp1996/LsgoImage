@@ -1,8 +1,21 @@
 extends layout
+mixin way(name)
+	li
+		a(id!=attributes.id) #{name}
 block content
-	canvas#oldImage
 	div.handle-area
-		button#toGray 灰度图
-		button#toInverse 反转
-		button#toMosaic 加马赛克
-		button#ConBrBaseFilter 改亮度与对比度
+		h2.handle-title 图像操作
+		ul.handle-ways
+			+way("灰度图")(id="toGray")
+			+way("原图")(id="toOld")
+			+way("反转")(id="toInverse")
+			+way("加马赛克")(id="toMosaic")
+			+way("改亮度与对比度：")(id="ConBrBaseFilter")
+		div#radix-change 
+			label 亮&nbsp;&nbsp;度：
+			progress#bright(max="4", value="2")
+			br
+			label 对比度：
+			progress#contrast(max="2", value="1")
+	div.content-wrapper
+		canvas#oldImage

@@ -11,8 +11,7 @@
     "url": "git+https://github.com/zp1996/LsgoImage.git"
   },
   "keywords": [
-    "image",
-    "图像处理"
+    "image"
   ],
   "author": "zp",
   "license": "ISC",
@@ -23,6 +22,9 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-jade": "^1.1.0",
-    "gulp-less": "^3.1.0"
+    "gulp-jshint": "^2.0.1",
+    "gulp-less": "^3.1.0",
+    "gulp-uglify": "^2.0.0",
+    "jshint": "^2.9.2"
   }
 }

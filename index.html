@@ -16,17 +16,29 @@
     </header>
     <!-- main-->
     <div class="main-area">
-      <canvas id="oldImage"></canvas>
       <div class="handle-area">
-        <button id="toGray">灰度图</button>
-        <button id="toInverse">反转</button>
-        <button id="toMosaic">加马赛克</button>
-        <button id="ConBrBaseFilter">改亮度与对比度</button>
+        <h2 class="handle-title">图像操作</h2>
+        <ul class="handle-ways">
+          <li><a id="toGray">灰度图</a></li>
+          <li><a id="toOld">原图</a></li>
+          <li><a id="toInverse">反转</a></li>
+          <li><a id="toMosaic">加马赛克</a></li>
+          <li><a id="ConBrBaseFilter">改亮度与对比度：</a></li>
+        </ul>
+        <div id="radix-change"> 
+          <label>亮&nbsp;&nbsp;度：</label>
+          <progress id="bright" max="4" value="2"></progress><br>
+          <label>对比度：</label>
+          <progress id="contrast" max="2" value="1"></progress>
+        </div>
+      </div>
+      <div class="content-wrapper">
+        <canvas id="oldImage"></canvas>
       </div>
     </div>
     <!-- footer-->
     <footer>Copyright © 2016 by <a href="https://github.com/zp1996" target="_blank" class="author">zp1996</a></footer>
     <script type="text/javascript" src="js/image.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/client.js"></script>
   </body>
 </html>
