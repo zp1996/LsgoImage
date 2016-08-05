@@ -203,6 +203,35 @@
 			return num > 255 ? 255 : (num < 0 ? 0 : num);
 		}
 	}; 
+	// 镜像
+	LSGOImage.fn.toMirror = function (arr) {
+		this.BaseFun(function (arr) {
+			var len = arr.length,
+				width = this.width,
+				mid = width / 2 | 0,
+				height = this.height, 
+				r, g, b, col, row, op;
+			for (var y = 0; y < height; y++) {
+				row = y * width * 4;
+				for (var x = 0; x < mid; x++) {
+					col = row + x * 4;
+					op = row + (width - 1 - x) * 4;
+
+					r = arr[col];
+					g = arr[col + 1];
+					b = arr[col + 2];
+
+					arr[col] = arr[op];
+					arr[col + 1] = arr[op + 1];
+					arr[col + 2] = arr[op + 2];
+
+					arr[op] = r;
+					arr[op + 1] = g;
+					arr[op + 2] = b;
+				}
+			}
+		}, arr);
+	};
 	g.I = g.LSGOImage = LSGOImage;
 
 })(this);

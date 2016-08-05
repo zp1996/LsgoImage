@@ -7,7 +7,7 @@ var oldImg = I(getId("oldImage")),
 	bb = new Blob(), 
 	arrObj = null, 
 	n = 0;
-["toGray", "toOld", "toMosaic", "toInverse"].forEach(function (val) {
+["toGray", "toOld", "toMosaic", "toInverse", "toMirror"].forEach(function (val) {
 	getId(val).addEventListener("click", function () {
 		oldImg[val]();
 	}, false);
