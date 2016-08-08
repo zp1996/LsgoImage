@@ -18,7 +18,7 @@ gulp.task("less", () => {
 gulp.task("js", () => {
 	gulp.src(filePath[1])
 			.pipe(jshint())
-			.pipe(uglify())
+			// .pipe(uglify())
 			.pipe(gulp.dest("./build/js"));
 });
 

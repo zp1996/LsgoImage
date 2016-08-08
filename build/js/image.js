@@ -1,1 +1,352 @@
-!function(t){var i=function(t){return new i.fn.init(t)};i.fn=i.prototype,i.fn.init=function(t){var i=t.width||0,n=t.height||0;this.n=1,this.startX=0,this.startY=0,this.imgData=null,Object.defineProperties(this,{width:{get:function(){return i},set:function(n){t.width=i=n}},height:{get:function(){return n},set:function(i){t.height=n=i}}}),this.ctx=t.getContext("2d"),this.oldData=[]},i.noop=function(){},i.setImg=function(t,n,a,h){this.startX=a||0,this.startY=h||0,this.width=this.startX+t.width,this.height=this.startX+t.height,this.ctx.drawImage(t,this.startX,this.startY,t.width,t.height),n=n||i.noop,this.getInfo(),n.call(this)},i.fn.init.prototype=i.fn,i.fn.setImg=function(t,n,a,h){if("string"==typeof t){var s=new Image,r=this;s.src=t,s.onload=function(){i.setImg.call(r,this,n,a,h)},s.onerror=function(){alert("图片路径有误！")}}else i.setImg.call(this,t,n,a,h);return this},i.fn.getInfo=function(t){return this.imgData=this.ctx.getImageData(this.startX,this.startY,this.width-this.startX,this.height-this.startY),this.oldData=JSON.parse(JSON.stringify(this.imgData.data)),this},i.fn.matrixSlice=function(t){t=t||5,this.n=t;for(var i,n=this.imgData.data,a=n.length>>2,h=a/t|0,s={},r=0,o=0;o<a;o+=h)i=o+4*h,i=i<a?i:-1,s[r++]=Array.prototype.slice.call(n,o,o+4*h);return s},i.fn.BaseFun=function(t,i){return i=i||this.imgData.data,t.call(this,i),this.ctx.putImageData(this.imgData,0,0),this},i.fn.toGray=function(t){this.BaseFun(function(t){for(var i,n,a,h=t.length,s=0;s<h;s+=4)i=t[s],n=t[s+1],a=t[s+2],t[s]=t[s+1]=t[s+2]=(299*i+587*n+114*a)/1e3|0},t)},i.fn.toInverse=function(t){this.BaseFun(function(t){for(var i=t.length,n=0;n<i;n+=4)t[n]=255-t[n],t[n+1]=255-t[n+1],t[n+2]=255-t[n+2]},t)},i.fn.toOld=function(){this.BaseFun(function(t){for(var i=t.length,n=0;n<i;n+=4)t[n]=this.oldData[n],t[n+1]=this.oldData[n+1],t[n+2]=this.oldData[n+2]})},i.fn.toMosaic=function(t,i){this.BaseFun(function(t){i=i||10;for(var a,s,r,o,e=this.width,f=this.height,u=t.length,c=0;c<e;c+=i)for(var g=0;g<f;g+=i){m=Math.floor(Math.random()*i),n=Math.floor(Math.random()*i),h=g+m>f-1?f-1:g+m,w=c+n>e-1?e-1:c+n,o=e*h*4+4*w,a=t[o],s=t[o+1],r=t[o+2];for(var l=0;l<i;l++)for(var d=0;d<i&&(o=e*(g+l)*4+4*(c+d),!(o>u));d++)t[o]=a,t[o+1]=s,t[o+2]=r}},t)},i.fn.ConBrBaseFilter=function(t,i,n){Array.isArray(t)||(n=i,i=t),this.BaseFun(function(t){if(i||n){for(var a=t.length,h=[0,0,0],s=this.width*this.height,r=0;r<a;r+=4)h[0]+=this.oldData[r],h[1]+=this.oldData[r+1],h[2]+=this.oldData[r+2],t[r]=this.oldData[r],t[r+1]=this.oldData[r+1],t[r+2]=this.oldData[r+2];h=h.map(function(t){return t/s|0});for(var r=0;r<a;r+=4)t[r]-=h[0],t[r+1]-=h[1],t[r+2]-=h[2],t[r]=t[r]*i|0,t[r+1]=t[r+1]*i|0,t[r+2]=t[r+2]*i|0,t[r]+=h[0]*n|0,t[r+1]+=h[1]*n|0,t[r+2]+=h[2]*n|0}})},i.fn.toMirror=function(t){this.BaseFun(function(t){for(var i,n,a,h,s,r,o=(t.length,this.width),e=o/2|0,f=this.height,u=0;u<f;u++){s=u*o*4;for(var c=0;c<e;c++)h=s+4*c,r=s+4*(o-1-c),i=t[h],n=t[h+1],a=t[h+2],t[h]=t[r],t[h+1]=t[r+1],t[h+2]=t[r+2],t[r]=i,t[r+1]=n,t[r+2]=a}},t)},t.I=t.LSGOImage=i}(this);
+/**
+  * 图像操作
+  * some simple methods in image processing
+  * @author zp
+  */
+(function (g) {
+
+	// 规范像素值
+	function clamp (num) {
+		return num > 255 ? 255 : (num < 0 ? 0 : num);
+	}
+	// 获得加权矩阵
+	function getMatrix (matrix, r, size) {
+		var cache = {}, sum = 0,
+			singma = 1.5,
+			singmaPow = 2 * Math.pow(singma, 2),
+			singmaPI = Math.PI * singmaPow;
+		for (var i = 0; i < size; i++) {
+			matrix[i] = [];
+			var x = Math.abs(r - i);
+			for (var j = 0; j < size; j++) {
+				var y = Math.abs(r - j),
+					temp = x + y;
+				matrix[i][j] = temp in cache ? cache[temp] : 
+											 (cache[temp] = Math.exp(-(Math.pow(x, 2) + Math.pow(y, 2)) / singmaPow) / singmaPI); 
+				sum += matrix[i][j];
+			}
+		}
+		// 使权重之和为1
+		for (var i = 0; i < size; i++) {
+			for (var j = 0; j < size; j++) {
+				matrix[i][j] /= sum;
+			}
+		}
+	}
+	var LSGOImage = function (canvas) {
+		return new LSGOImage.fn.init(canvas);
+	};
+	LSGOImage.fn = LSGOImage.prototype;
+	LSGOImage.fn.init = function (canvas) {
+		var _width = canvas.width || 0,
+			_height = canvas.height || 0;
+		this.n = 1;
+		this.startX = 0;
+		this.startY = 0;
+		this.imgData = null;
+		Object.defineProperties(this, {
+			width: {
+				get: function () {
+					return _width;
+				},
+				set: function (val) {
+					canvas.width = _width = val;
+				}
+			},
+			height: {
+				get: function () {
+					return _height;
+				},
+				set: function (val) {
+					canvas.height = _height = val;
+				}
+			}
+		});
+		this.ctx = canvas.getContext("2d");
+		this.oldData = [];
+	};
+	LSGOImage.noop = function () {};
+	LSGOImage.setImg = function (img, fn, x, y) {
+		this.startX = x || 0;
+		this.startY = y || 0;
+		this.width = this.startX + img.width;
+		this.height = this.startX + img.height;
+		this.ctx.drawImage(img, this.startX, this.startY, img.width, img.height);
+		fn = fn || LSGOImage.noop;
+		this.getInfo();
+		fn.call(this);
+	};
+	LSGOImage.fn.init.prototype = LSGOImage.fn;
+	// 设置图像
+	LSGOImage.fn.setImg = function (url, fn, x, y) {
+		if (typeof url === "string") {
+			var img = new Image(),
+				self = this;
+			img.src = url;
+			img.onload = function () {
+				LSGOImage.setImg.call(self, this, fn, x, y);
+			};
+			img.onerror = function () {
+				alert("图片路径有误！");
+			};
+		} else {
+			LSGOImage.setImg.call(this, url, fn, x, y);
+		}
+		return this;
+	};
+	// 得到图像数组
+	LSGOImage.fn.getInfo = function (canvas) {
+		this.imgData = this.ctx.getImageData(this.startX, this.startY, 
+																 				 this.width - this.startX, 
+																         this.height - this.startY);
+		this.oldData = [];
+		for (var i = 0; i < this.height; i++) {
+			var start = i * this.width * 4;
+			this.oldData[i] = this.imgData.data.slice(start, start + this.width * 4);
+		}
+		return this;
+	};
+	// 产生分解图像数组
+	LSGOImage.fn.matrixSlice = function (n) {
+		n = n || 5;
+		this.n = n;
+		var arr = this.imgData.data,
+			len = arr.length >> 2,
+			step = ((len / n) | 0),
+			res = {},
+			index = 0,
+			t;
+		for (var i = 0; i < len; i += step) {
+			t = i + 4 * step;
+			t = t < len ? t : -1;
+			res[index++] = Array.prototype.slice.call(arr, i, i + 4 * step);
+		}
+		return res;
+	};
+	// 模板函数
+	LSGOImage.fn.BaseFun = function (fn, arr) {
+		arr = arr || this.imgData.data;
+		fn.call(this, arr);
+		this.ctx.putImageData(this.imgData, 0, 0);
+		return this;
+	};
+	// 转成灰度图
+	LSGOImage.fn.toGray = function (arr) {
+		this.BaseFun(function (arr) {
+			var r, g, b, len = arr.length;
+			for (var i = 0; i < len; i += 4) {
+				r = arr[i]; g = arr[i + 1]; b = arr[i + 2];
+				arr[i] = arr[i + 1] = arr[i + 2] = (299 * r + 587 * g + 114 * b) / 1000 | 0; 
+			}
+		}, arr);
+	};
+	// 反转
+	LSGOImage.fn.toInverse = function (arr) {
+		this.BaseFun(function (arr) {
+			var len = arr.length;
+			for (var i = 0; i < len; i += 4) {
+				arr[i] = 255 - arr[i];
+				arr[i + 1] = 255 - arr[i + 1];
+				arr[i + 2] = 255 - arr[i + 2]; 
+			}
+		}, arr);
+	};
+	// 变为原图
+	LSGOImage.fn.toOld = function () {
+		this.BaseFun(function (arr) {	
+			var len = arr.length,
+				width = this.width * 4, row;
+			for (var i = 0; i < len; i += 4) {
+				row = i / width | 0;
+				arr[i] = this.oldData[row][i % width];
+				arr[i + 1] = this.oldData[row][(i + 1) % width];
+				arr[i + 2] = this.oldData[row][(i + 2) % width]; 
+			}
+		});
+	};
+	// 马赛克(利用领域内任意一点代替当前领域像素点)
+	LSGOImage.fn.toMosaic = function (arr, level) {
+		this.BaseFun(function (arr) {
+			level = level || 10;
+			var row = this.width,
+				col = this.height,
+				len = arr.length,
+				r, g, b, pos;
+			for (var i = 0; i < row; i += level) {
+				for (var j = 0; j < col; j += level) {
+					m = Math.floor(Math.random() * level);
+					n = Math.floor(Math.random() * level);
+					h = j + m > col - 1 ? col - 1 : j + m;
+					w = i + n > row - 1 ? row - 1 : i + n;	
+					pos = row * h * 4 + w * 4;			
+					r = arr[pos];
+					g = arr[pos + 1];
+					b = arr[pos + 2];
+					for (var x = 0; x < level; x++) {
+						for (var y = 0; y < level; y++) {
+							pos = row * (j + x) * 4 + (i + y) * 4;
+							if (pos > len) 
+								break;
+							arr[pos] = r;
+							arr[pos + 1] = g;
+							arr[pos + 2] = b;
+						}
+					}
+				}
+			}
+		}, arr);
+	};
+	// 调整亮度与对比度
+	LSGOImage.fn.ConBrBaseFilter = function (arr, c, b) {
+		if (!Array.isArray(arr)) {
+			b = c;
+			c = arr;
+		}
+		this.BaseFun(function (arr) {
+			if (!c && !b)
+				return void 0;
+			var len = arr.length, 
+				sum = [0, 0, 0],
+				total = this.width * this.height,
+				width = this.width * 4, row;
+			// 计算出r,g,b的均值
+			for (var i = 0; i < len; i += 4) {
+				row = i / width | 0;
+
+				arr[i] = this.oldData[row][i % width];
+				arr[i + 1] = this.oldData[row][(i + 1) % width];
+				arr[i + 2] = this.oldData[row][(i + 2) % width];
+
+				sum[0] += arr[i];
+				sum[1] += arr[i + 1];
+				sum[2] += arr[i + 2];
+			}	
+			sum = sum.map(function (val) {
+				return val / total | 0;
+			});
+			for (var i = 0; i < len; i += 4) {
+				arr[i] -= sum[0];
+				arr[i + 1] -= sum[1];
+				arr[i + 2] -= sum[2];
+
+				arr[i] = arr[i] * c | 0;
+				arr[i + 1] = arr[i + 1] * c | 0;
+				arr[i + 2] = arr[i + 2] * c | 0;
+
+				arr[i] += sum[0] * b | 0;
+				arr[i + 1] += sum[1] * b | 0;
+				arr[i + 2] += sum[2] * b | 0;
+			}
+		});
+	}; 
+	// 镜像
+	LSGOImage.fn.toMirror = function (arr) {
+		this.BaseFun(function (arr) {
+			var len = arr.length,
+				width = this.width,
+				mid = width / 2 | 0,
+				height = this.height, 
+				r, g, b, col, row, op;
+			for (var y = 0; y < height; y++) {
+				row = y * width * 4;
+				for (var x = 0; x < mid; x++) {
+					col = row + x * 4;
+					op = row + (width - 1 - x) * 4;
+
+					r = arr[col];
+					g = arr[col + 1];
+					b = arr[col + 2];
+
+					arr[col] = arr[op];
+					arr[col + 1] = arr[op + 1];
+					arr[col + 2] = arr[op + 2];
+
+					arr[op] = r;
+					arr[op + 1] = g;
+					arr[op + 2] = b;
+				}
+			}
+		}, arr);
+	};
+	// 高斯模糊
+	LSGOImage.fn.GaosiBulr = function (arr) {
+		this.BaseFun(function (arr) {
+			var r = 1, 
+				size = 2 * r + 1,
+				matrix = [],
+				width = this.width,
+				height = this.height,
+				row, col, temp;
+			// 权重矩阵
+			getMatrix(matrix, r, size);
+			for (var y = 0; y < height; y++) {
+				row = y * width * 4;
+				for (var x = 0; x < width; x++) {
+					col = row + x * 4;
+					temp = calcPixel(matrix, readPixel.call(this, x, y, r, size));
+					arr[col] = temp[0];
+					arr[col + 1] = temp[1];
+					arr[col + 2] = temp[2];
+				}
+			}
+			// 根据权值矩阵计算像素点取值
+			function calcPixel (matrix, pixels) {
+				var r = 0, g = 0, b = 0;
+				for (var i = 0, len = matrix.length; i < len; i++) {
+					for (var j = 0; j < len; j++) {
+						r += matrix[i][j] * pixels[i][j][0];
+						g += matrix[i][j] * pixels[i][j][1];
+						b += matrix[i][j] * pixels[i][j][2];
+					}
+				}
+				return [r | 0, g | 0, b | 0];
+			}
+			// 取边界点
+			function readPixel (x, y, r, size) {
+				var size = 2 * r + 1,
+					res = [], pos, 
+					sX = x - r, 
+					sY = y - r, 
+					tX, tY;
+				for (var i = 0; i < size; i++) {
+					res[i] = [];
+					for (var j = 0; j < size; j++) {
+						res[i][j] = [];
+						tX = i + sX;
+						tY = j + sY;
+						tX = tX >= this.width ? x : Math.abs(tX);
+						tY = tY >= this.height ? y : Math.abs(tY);
+						pos = tX * 4 + tY * 4 * this.width;
+						res[i][j][0] = this.imgData.data[pos];
+						res[i][j][1] = this.imgData.data[pos + 1];
+						res[i][j][2] = this.imgData.data[pos + 2];
+					}
+				}
+				return res;
+			}
+		}, arr);
+	};
+	// 素描效果
+	LSGOImage.fn.toSketch = function (arr) {
+		this.BaseFun(function (arr) {
+			// 去色
+			this.toGray(arr);
+			// 对去色图层取反色
+			var b = arr.slice();
+			this.toInverse(b);
+			this.GaosiBulr(b);
+			// 颜色渐淡
+			for (var i = 0; i < arr.length; i += 4) {
+				arr[i] = calc(arr[i], b[i]);
+				arr[i + 1] = calc(arr[i + 1], b[i + 1]);
+				arr[i + 2] = calc(arr[i + 2], b[i + 2]);
+			}
+			function calc (a, b) {
+				var temp = a + a * b / (256 - b);
+				temp = temp | 0;
+				return Math.min(255, temp);
+			} 
+		});
+	};
+	g.I = g.LSGOImage = LSGOImage;
+})(this);

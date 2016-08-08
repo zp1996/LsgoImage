@@ -7,12 +7,12 @@ var oldImg = I(getId("oldImage")),
 	bb = new Blob(), 
 	arrObj = null, 
 	n = 0;
-["toGray", "toOld", "toMosaic", "toInverse", "toMirror"].forEach(function (val) {
+["toGray", "toOld", "toMosaic", "toInverse", "toMirror", "toSketch", "GaosiBulr"].forEach(function (val) {
 	getId(val).addEventListener("click", function () {
 		oldImg[val]();
 	}, false);
 });
-oldImg.setImg("/images/t3.jpg");
+oldImg.setImg("/images/lena.png");
 
 
 // 图像相关配置
