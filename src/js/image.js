@@ -271,7 +271,7 @@
 	// 高斯模糊
 	LSGOImage.fn.GaosiBulr = function (arr) {
 		this.BaseFun(function (arr) {
-			var r = 1, 
+			var r = 3, 
 				size = 2 * r + 1,
 				matrix = [],
 				width = this.width,
