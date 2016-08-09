@@ -283,7 +283,7 @@
 				row = y * width * 4;
 				for (var x = 0; x < width; x++) {
 					col = row + x * 4;
-					temp = calcPixel(matrix, readPixel.call(this, x, y, r, size));
+					temp = calcPixel(matrix, readPixel.call(this, x, y, r, size, arr));
 					arr[col] = temp[0];
 					arr[col + 1] = temp[1];
 					arr[col + 2] = temp[2];
@@ -302,7 +302,8 @@
 				return [r | 0, g | 0, b | 0];
 			}
 			// 取边界点
-			function readPixel (x, y, r, size) {
+			function readPixel (x, y, r, size, arr) {
+				arr = arr || this.imgData.data;
 				var size = 2 * r + 1,
 					res = [], pos, 
 					sX = x - r, 
@@ -317,9 +318,9 @@
 						tX = tX >= this.width ? x : Math.abs(tX);
 						tY = tY >= this.height ? y : Math.abs(tY);
 						pos = tX * 4 + tY * 4 * this.width;
-						res[i][j][0] = this.imgData.data[pos];
-						res[i][j][1] = this.imgData.data[pos + 1];
-						res[i][j][2] = this.imgData.data[pos + 2];
+						res[i][j][0] = arr[pos];
+						res[i][j][1] = arr[pos + 1];
+						res[i][j][2] = arr[pos + 2];
 					}
 				}
 				return res;
