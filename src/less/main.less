@@ -23,6 +23,14 @@ progress{
 	width: @w;
 	height: @h;
 }
+.center{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	margin: auto;
+}
 // 头部样式
 header{
 	.size(100%, 80px);
@@ -82,6 +90,11 @@ header{
 .content-wrapper{
 	margin-left: 300px;
 	padding: 50px;
+	position: relative;
+}
+#info{
+	visibility: hidden;
+	// .center();
 }
 // footer
 footer{
