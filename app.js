@@ -1,6 +1,6 @@
 const http = require("http"),
 	fs = require("fs"),
-	types = require("./mine"),
+	types = require("./mine.json"),
 	staticPath = __dirname + "/build";
 function ServerFile (res, path, type, status) {
 	status = status || 200;
