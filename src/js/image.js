@@ -349,5 +349,58 @@
 			} 
 		});
 	};
+	// 基于Roberts边缘提取	
+	LSGOImage.fn.BaseRoberts = function (arr, fn) {
+		var width = this.width,
+			height = this.height,
+			index, indexr, indexd, indexrd, newX, newY;
+		for (var y = 0; y < height; y++) {
+			var xgr, xgg, xgb, 
+				ygr, ygb, ygg,
+				mr, mb, mg;
+			for (var x = 0; x < width; x++) {
+				index = (y * width + x) * 4;
+				// 取对角线位置
+				newX = x + 1;
+				newY = y + 1;
+				newX = newX < width  ? newX : 0;
+				newY = newY < height ? newY : 0;
+				indexr = (y * width + newX) * 4;
+				indexd = (newY * width + x) * 4;
+				indexrd = (newY * width + newX) * 4;
+				// x方向梯度
+				xgr = arr[index] - arr[indexrd];
+				xgg = arr[index + 1] - arr[indexrd + 1];
+				xgb = arr[index + 2] - arr[indexrd + 2];
+				// y方向梯度
+				ygr = arr[indexr] - arr[indexd];
+				ygg = arr[indexr + 1] - arr[indexd + 1]; 
+				ygb = arr[indexr + 2] - arr[indexd + 2];  
+				// 计算振幅
+				mr = Math.sqrt(xgr * xgr + ygr * ygr);
+				mg = Math.sqrt(xgg * xgg + ygg * ygg);
+				mb = Math.sqrt(xgb * xgb + ygb * ygb);
+
+				arr[index] = fn(mr, arr[index]);
+				arr[index + 1] = fn(mg, arr[index + 1]);
+				arr[index + 2] = fn(mb, arr[index + 2]);
+			}	
+		}
+	};
+	LSGOImage.fn.Roberts = function (arr) {
+		this.BaseFun(function (arr) {
+			this.BaseRoberts(arr, function (a, b) {
+				return a;
+			});
+		}, arr);
+	};
+	// 基于Roberts算子锐化
+	LSGOImage.fn.RobertsSharp = function (arr) {
+		this.BaseFun(function (arr) {
+			this.BaseRoberts(arr, function (a, b) {
+				return a + b;
+			});
+		}, arr);
+	};
 	g.I = g.LSGOImage = LSGOImage;
 })(this);
