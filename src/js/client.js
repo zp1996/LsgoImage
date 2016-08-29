@@ -14,7 +14,7 @@ var oldImg = I(getId("oldImage")),
 		oldImg[val]();
 	}, false);
 });
-oldImg.setImg("/images/building.jpg");
+oldImg.setImg("images/building.jpg");
 
 
 // 图像相关配置
