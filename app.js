@@ -22,5 +22,5 @@ http.createServer((req, res) => {
 	else
 		path = staticPath + path;
 	ServerFile(res, path, types[type]);
-}).listen(3000);
+}).listen(2016);
 console.log("Server is on...");

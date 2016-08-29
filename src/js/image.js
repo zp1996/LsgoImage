@@ -381,9 +381,9 @@
 				mg = Math.sqrt(xgg * xgg + ygg * ygg);
 				mb = Math.sqrt(xgb * xgb + ygb * ygb);
 
-				arr[index] = fn(mr, arr[index]);
-				arr[index + 1] = fn(mg, arr[index + 1]);
-				arr[index + 2] = fn(mb, arr[index + 2]);
+				arr[index] = clamp(fn(mr, arr[index]));
+				arr[index + 1] = clamp(fn(mg, arr[index + 1]));
+				arr[index + 2] = clamp(fn(mb, arr[index + 2]));
 			}	
 		}
 	};
