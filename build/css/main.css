@@ -43,7 +43,7 @@ header {
 .logo-area {
   width: 80px;
   height: 80px;
-  background: url(/images/logo.png);
+  background: url(../images/logo.png);
   cursor: pointer;
   float: left;
 }
