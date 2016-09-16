@@ -100,6 +100,7 @@
 																 				 this.width - this.startX, 
 																         this.height - this.startY);
 		this.oldData = [];
+		console.log(this.imgData.data);
 		for (var i = 0; i < this.height; i++) {
 			var start = i * this.width * 4;
 			this.oldData[i] = this.imgData.data.slice(start, start + this.width * 4);
