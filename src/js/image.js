@@ -333,7 +333,7 @@
 			// 去色
 			this.toGray(arr);
 			// 对去色图层取反色
-			var b = arr.slice();
+			var b = Array.prototype.slice.call(arr);
 			this.toInverse(b);
 			this.GaosiBulr(b);
 			// 颜色渐淡
