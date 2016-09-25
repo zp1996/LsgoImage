@@ -402,5 +402,24 @@
 			});
 		}, arr);
 	};
+	// 怀旧效果
+	LSGOImage.fn.toNostalgia = function (arr) {
+		function noise () {
+			return Math.random() * 0.5 + 0.5;
+		}
+		function colorBlend (scale, dest, src) {
+			return (scale * dest + (1 - scale) * src) | 0;
+		}
+		this.BaseFun(function (arr) {
+			for (var i = 0, len = arr.length; i < len; i += 4) {
+				var tr = arr[i],
+					tg = arr[i + 1],
+					tb = arr[i + 2];
+				arr[i] = colorBlend(noise(), (tr * 0.393) + (tg * 0.769) + (tb * 0.189), tr);
+				arr[i + 1] = colorBlend(noise(), (tr * 0.349) + (tg * 0.686) + (tb * 0.168), tg);
+				arr[i + 2] = colorBlend(noise(), (tr * 0.272) + (tg * 0.534) + (tb * 0.131), tb);
+			}
+		}, arr);
+	};
 	g.I = g.LSGOImage = LSGOImage;
 })(this);

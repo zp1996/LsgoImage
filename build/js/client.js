@@ -9,7 +9,7 @@ var oldImg = I(getId("oldImage")),
 	n = 0;
 ["toGray", "toOld", "toMosaic", "toInverse", 
  "toMirror", "toSketch", "GaosiBulr", "Roberts", 
- "RobertsSharp"].forEach(function (val) {
+ "RobertsSharp", "toNostalgia"].forEach(function (val) {
 	getId(val).addEventListener("click", function () {
 		oldImg[val]();
 	}, false);
