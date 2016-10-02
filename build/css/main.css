@@ -60,11 +60,10 @@ header {
 }
 .handle-area {
   float: left;
-  padding: 50px;
+  padding: 10px 50px;
   width: 200px;
-  height: calc(100% - 80px);
-  min-height: 500px;
-  overflow-y: scroll;
+  height: 500px;
+  overflow: scroll;
 }
 .handle-ways {
   list-style-type: none;
@@ -89,11 +88,18 @@ header {
 }
 .content-wrapper {
   margin-left: 300px;
+  height: 100%;
   padding: 50px;
   position: relative;
 }
 #info {
   visibility: hidden;
+}
+#oldImage {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  margin: auto;
 }
 footer {
   height: 40px;
