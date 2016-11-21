@@ -1,0 +1,10 @@
+mixin child
+	- for(var i = 0; i < 4; i++)
+		div(class="circle#{i + 1}")
+div#mask
+	div.loading
+		div.spinner
+			- for(var i = 0; i < 3; i++)
+				div.spinner-container(class="container#{i + 1}")
+					+child()
+		div.layer-text 正在加载中...
