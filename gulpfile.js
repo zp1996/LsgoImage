@@ -18,7 +18,7 @@ const gulp = require("gulp"),
 gulp.task("less", () => {
 	return gulp.src(filePath[0])
 						 .pipe(less())
-						 .pipe(concat("main.min.css"))
+						 .pipe(concat("main.css"))
 						 .pipe(cleanCss())    // 上线后打开
 						 .pipe(gulp.dest("./build/css"))
 						 .pipe(browserSync.reload({stream: true}));

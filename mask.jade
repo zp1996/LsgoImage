@@ -5,6 +5,6 @@ div#mask
 	div.loading
 		div.spinner
 			- for(var i = 0; i < 3; i++)
-				div.spinner-container(class="container#{i + 1}")
+				div.spinner-container(class="mask-container#{i + 1}")
 					+child()
 		div.layer-text 正在加载中...
