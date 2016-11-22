@@ -11,11 +11,11 @@
 	function clamp (num) {
 		return num > 255 ? 255 : (num < 0 ? 0 : num);
 	}
-	var LSGOImage = function (canvas) {
-		return new LSGOImage.fn.init(canvas);
+	var LSGOImage = function (canvas, before, after) {
+		return new LSGOImage.fn.init(canvas, before, after);
 	};
 	LSGOImage.fn = LSGOImage.prototype;
-	LSGOImage.fn.init = function (canvas) {
+	LSGOImage.fn.init = function (canvas, before, after) {
 		var _width = canvas.width || 0,
 			_height = canvas.height || 0;
 		this.n = 1;
@@ -42,6 +42,8 @@
 		});
 		this.ctx = canvas.getContext("2d");
 		this.oldData = [];
+		this.before = before || LSGOImage.noop;
+		this.after = after || LSGOImage.noop;
 	};
 	LSGOImage.noop = function () {};
 	LSGOImage.setImg = function (img, fn, x, y) {
@@ -256,10 +258,12 @@
 	};
 	// 高斯模糊
 	LSGOImage.fn.GaosiBulr = function (arr) {
+		this.before();
 		arr = arr || this.imgData.data;
 		var worker = GaosiWorker || (GaosiWorker = new Worker("js/GaosiBulr.js"));
 		worker.onmessage = (event) => {
 			this.changeImage(event.data);
+			this.after();
 		};
 		worker.postMessage({
 			arr: arr, 
@@ -269,6 +273,7 @@
 	};
 	// 素描效果
 	LSGOImage.fn.toSketch = function () {
+		this.before();
 		var arr = this.imgData.data;
 		// 去色
 		this.toGray(arr);
@@ -283,6 +288,7 @@
 				arr[i + 2] = calc(arr[i + 2], event.data[i + 2]);
 			}
 			this.changeImage(arr);
+			this.after();
 		};
 		worker.postMessage({
 			arr: arr, 

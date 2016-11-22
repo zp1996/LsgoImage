@@ -1,20 +1,26 @@
 "use strict";
 
+var oldImg = I(getId("oldImage"), before, after),
+    mask = getId("mask");
+
 function getId(id) {
-	var x = 10;
 	return document.getElementById(id);
 }
-var oldImg = I(getId("oldImage")),
-    toGray = getId("toGray"),
-    bb = new Blob(),
-    arrObj = null,
-    n = 0;
+
+function before() {
+	mask.style.display = "block";
+}
+
+function after() {
+	mask.style.display = "none";
+}
+
 ["toGray", "toOld", "toMosaic", "toInverse", "toMirror", "toSketch", "GaosiBulr", "Roberts", "RobertsSharp", "toNostalgia"].forEach(function (val) {
 	getId(val).addEventListener("click", function () {
 		oldImg[val]();
 	}, false);
 });
-oldImg.setImg("images/building.jpg");
+oldImg.setImg("images/building.jpg", after);
 
 // 图像相关配置
 var width = document.getElementsByTagName("progress")[0].offsetWidth,

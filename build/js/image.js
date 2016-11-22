@@ -13,11 +13,11 @@
 	function clamp(num) {
 		return num > 255 ? 255 : num < 0 ? 0 : num;
 	}
-	var LSGOImage = function LSGOImage(canvas) {
-		return new LSGOImage.fn.init(canvas);
+	var LSGOImage = function LSGOImage(canvas, before, after) {
+		return new LSGOImage.fn.init(canvas, before, after);
 	};
 	LSGOImage.fn = LSGOImage.prototype;
-	LSGOImage.fn.init = function (canvas) {
+	LSGOImage.fn.init = function (canvas, before, after) {
 		var _width = canvas.width || 0,
 		    _height = canvas.height || 0;
 		this.n = 1;
@@ -44,6 +44,8 @@
 		});
 		this.ctx = canvas.getContext("2d");
 		this.oldData = [];
+		this.before = before || LSGOImage.noop;
+		this.after = after || LSGOImage.noop;
 	};
 	LSGOImage.noop = function () {};
 	LSGOImage.setImg = function (img, fn, x, y) {
@@ -274,10 +276,12 @@
 	LSGOImage.fn.GaosiBulr = function (arr) {
 		var _this2 = this;
 
+		this.before();
 		arr = arr || this.imgData.data;
 		var worker = GaosiWorker || (GaosiWorker = new Worker("js/GaosiBulr.js"));
 		worker.onmessage = function (event) {
 			_this2.changeImage(event.data);
+			_this2.after();
 		};
 		worker.postMessage({
 			arr: arr,
@@ -289,6 +293,7 @@
 	LSGOImage.fn.toSketch = function () {
 		var _this3 = this;
 
+		this.before();
 		var arr = this.imgData.data;
 		// 去色
 		this.toGray(arr);
@@ -303,6 +308,7 @@
 				arr[i + 2] = calc(arr[i + 2], event.data[i + 2]);
 			}
 			_this3.changeImage(arr);
+			_this3.after();
 		};
 		worker.postMessage({
 			arr: arr,

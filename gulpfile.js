@@ -46,7 +46,8 @@ gulp.task("jade", () => {
 			.pipe(jade({
 				pretty: true
 			}))
-			.pipe(gulp.dest("./"));
+			.pipe(gulp.dest("./"))
+			.pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task("server", tasks, () => {
