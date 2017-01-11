@@ -84,6 +84,7 @@ function GaosiBulr(arr, width, height) {
 	}
 }
 onmessage = function onmessage(event) {
+	console.log(event);
 	var data = event.data;
 	GaosiBulr(data.arr, data.width, data.height);
 	postMessage(data.arr);

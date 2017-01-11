@@ -279,6 +279,7 @@
 		this.before();
 		arr = arr || this.imgData.data;
 		var worker = GaosiWorker || (GaosiWorker = new Worker("js/GaosiBulr.js"));
+		console.log(worker);
 		worker.onmessage = function (event) {
 			_this2.changeImage(event.data);
 			_this2.after();
